@@ -1,0 +1,26 @@
+# Node modules
+/node_modules
+
+# Build output
+/dist
+/build
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+
+# Vercel or other deployment
+.vercel
