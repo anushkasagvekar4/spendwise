@@ -10,7 +10,7 @@ const router = Router();
 router.post("/addExpense", addExpense);
 router.get("/getExpense", getExpense);
 router.get("/getExpenseById/:id", getExpenseById);
-router.put("/updateExpense/:id", updateExpense);
+router.patch("/updateExpense/:id", updateExpense);
 router.delete("/deleteExpense/:id", deleteExpense);
 
 export default router;

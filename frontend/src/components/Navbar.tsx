@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { IoMdHome } from "react-icons/io";
-import { FaHistory } from "react-icons/fa";
+import { GrFormAdd } from "react-icons/gr";
 
 const Dashboard = () => {
   return (
@@ -16,9 +16,9 @@ const Dashboard = () => {
             </Link>
           </li>
           <li className="p-2 gap-1">
-            <Link href={"/History"} className="flex items-center gap-2">
-              <FaHistory />
-              history
+            <Link href={"/add_expense"} className="flex items-center gap-2">
+              <GrFormAdd />
+              Add Expense
             </Link>
           </li>
         </ul>

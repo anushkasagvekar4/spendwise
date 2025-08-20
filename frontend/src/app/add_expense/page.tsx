@@ -59,7 +59,6 @@ const ExpenseForm = () => {
 
       if (data.success) {
         setMessage("Expense added successfully!");
-        console.log({ amount, description, date, time, selectedTags });
 
         setAmount("");
         setDescription("");
@@ -70,7 +69,6 @@ const ExpenseForm = () => {
         setMessage(data.message || "Failed to add expense");
       }
     } catch (err) {
-      console.error("Error adding expense:", err);
       setMessage("Server error. Try again later.");
     }
   };
@@ -129,6 +127,7 @@ const ExpenseForm = () => {
           <label className="block mb-1 font-medium">Select Tags:</label>
           {allTags.map((tag, i) => (
             <button
+              type="button"
               onClick={() => handleTagsClick(tag)}
               key={i}
               className={`rounded-full border m-2 px-3 py-1 ${
@@ -142,7 +141,7 @@ const ExpenseForm = () => {
           ))}
         </div>
         <button
-          type="button"
+          type="submit"
           className="w-full bg-amber-700 rounded-lg hover:bg-amber-500 py-2"
         >
           Submit

@@ -1,14 +1,13 @@
 import { Request, Response } from "express";
 import ExpenseSchema from "../model/expenseModel";
+
 export const updateExpense = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    console.log("id:", id);
-    const { amount, description, category, date, time } = req.body;
-
+    5;
     if (!id) {
       res
         .status(400)
@@ -16,9 +15,19 @@ export const updateExpense = async (
       return;
     }
 
+    const updateData: any = {};
+    const allowedFields = ["amount", "description", "category", "date", "time"];
+
+    // Only add fields that exist in req.body
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        updateData[field] = req.body[field];
+      }
+    });
+
     const updatedExpense = await ExpenseSchema.findByIdAndUpdate(
       id,
-      { amount, description, category, date, time },
+      { $set: updateData }, // only updates the fields in updateData
       { new: true, runValidators: true }
     );
 

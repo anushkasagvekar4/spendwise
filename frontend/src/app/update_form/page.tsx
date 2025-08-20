@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { Expense } from "../History/page";
 interface UpdateFormProps {
-  expenseId: string; // now TS knows it's a string
+  expenseId: string;
 }
 const UpdateForm: React.FC<UpdateFormProps> = ({ expenseId }) => {
   const [amount, setAmount] = useState<string>("");
@@ -9,6 +10,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ expenseId }) => {
   const [date, setDate] = useState<string>("");
   const [time, setTime] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [data, setData] = useState<Expense>();
 
   const allTags = [
     "Bills",
@@ -29,23 +31,23 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ expenseId }) => {
   };
 
   useEffect(() => {
+    if (!expenseId) return;
+
     const fetchExpense = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/expenses/getExpensesById/${expenseId}`
+          `http://localhost:3001/api/expenses/getExpenseById/${expenseId}`
         );
         const data = await res.json();
-        if (res.ok) {
-          setAmount(data.amount);
-          setDescription(data.description);
-          setDate(data.date);
-          setTime(data.time);
-          setSelectedTags(data.category || []);
+
+        setData(data.data);
+
+        if (res.ok && data) {
+          const expense = data.data;
         } else {
-          alert("Error fetching expense: " + data.message);
+          alert("Error fetching expense: " + (data.message || "Unknown error"));
         }
       } catch (err) {
-        console.error(err);
         alert("Server error while fetching expense");
       }
     };
@@ -56,30 +58,28 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ expenseId }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const payload = {
-      amount,
-      description,
-      date,
-      time,
-      category: selectedTags,
-    };
+    const payload: any = {};
+    if (amount) payload.amount = Number(amount);
+    if (description) payload.description = description;
+    if (date) payload.date = date;
+    if (time) payload.time = time;
+    if (selectedTags.length) payload.category = selectedTags;
 
+    console.log(expenseId);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/expenses/updateExpense/${expenseId}`,
+        `http://localhost:3001/api/expenses/updateExpense/${expenseId}`,
         {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         }
       );
 
       const data = await res.json();
+      console.log(data);
       if (res.ok) {
         alert("Expense updated successfully!");
-        // optional: redirect or refresh data
       } else {
         alert("Error: " + data.message);
       }
@@ -99,9 +99,10 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ expenseId }) => {
           <label className="block mb-1 font-medium">Amount:</label>
           <input
             type="number"
-            value={amount}
+            defaultValue={data?.amount}
             onChange={(e) => {
               setAmount(e.target.value);
+              console.log("state", data);
             }}
             className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             placeholder="Enter Amount"
@@ -111,7 +112,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ expenseId }) => {
         <div>
           <label className="block mb-1 font-medium">Description</label>
           <textarea
-            value={description}
+            defaultValue={data?.description}
             onChange={(e) => {
               setDescription(e.target.value);
             }}
@@ -124,7 +125,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ expenseId }) => {
           <label className="block mb-1 font-medium">Date:</label>
           <input
             type="date"
-            value={date}
+            defaultValue={data?.date ? data.date.split("T")[0] : ""}
             onChange={(e) => {
               setDate(e.target.value);
             }}
@@ -136,7 +137,17 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ expenseId }) => {
           <label className="block mb-1 font-medium">Time:</label>
           <input
             type="time"
-            value={time}
+            defaultValue={
+              data?.time
+                ? (() => {
+                    const [h, m] = data.time.split(":").map(Number);
+                    const minutes = Math.min(m, 59); // fix invalid minutes > 59
+                    return `${String(h).padStart(2, "0")}:${String(
+                      minutes
+                    ).padStart(2, "0")}`;
+                  })()
+                : ""
+            }
             onChange={(e) => {
               setTime(e.target.value);
             }}
@@ -148,6 +159,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ expenseId }) => {
           <label className="block mb-1 font-medium">Select Tags:</label>
           {allTags.map((tag, i) => (
             <button
+              type="button"
               onClick={() => handleTagsClick(tag)}
               key={i}
               className={`rounded-full border m-2 px-3 py-1 ${

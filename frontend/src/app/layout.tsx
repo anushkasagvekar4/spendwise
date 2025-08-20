@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import AddExpense from "./add_expense/page";
 import Navbar from "@/components/Navbar";
-import AddButton from "@/components/AddButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,8 +31,6 @@ export default function RootLayout({
         <div className="h-screen">
           <Navbar />
           {children}
-          {/* overflow-y-auto */}
-          <AddButton />
         </div>
       </body>
     </html>
