@@ -1,26 +1,44 @@
 # Node modules
-/node_modules
+node_modules/
 
-# Build output
-/dist
-/build
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# Environment files
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Environment variables
 .env
 .env.local
 .env.*.local
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-pnpm-debug.log*
 
 # OS files
 .DS_Store
 Thumbs.db
 
-# TypeScript
-*.tsbuildinfo
+# Build output
+dist/
+build/
 
-# Vercel or other deployment
-.vercel
+# Coverage reports
+coverage/
+.nyc_output/
+
+# Cache
+.cache/
+.next/
+out/
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo

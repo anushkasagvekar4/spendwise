@@ -4,16 +4,50 @@ import Link from "next/link";
 import { MdEditSquare } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
+import { BiSolidFileExport } from "react-icons/bi";
+import { CSVLink } from "react-csv";
 import UpdateForm from "../update_form/page";
 const History = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
+  const data = [
+    {
+      srNo: 1,
+      amount: 100,
+      description: "Eating 3 pizza",
+      category: "Food",
+      date: "2025-08-20",
+      time: "03:00",
+    },
+    // more rows
+  ];
 
   return (
     <div className="p-4">
       <h1 className="font-bold text-xl mb-3">History</h1>
+      <div className="flex flex-wrap justify-end items-center gap-5 mb-4">
+        <label htmlFor="">Filter:</label>
+        <input type="date" className="border p-1 rounded" />
+        <span>To</span>
+        <input type="date" className="border p-1 rounded" />
+        <input
+          type="search"
+          placeholder="search here"
+          className="border p-1 rounded"
+        />
+        {/* <button className="flex items-center gap-1 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">
+          Export <BiSolidFileExport size={25} />
+        </button> */}
+        <CSVLink
+          data={data}
+          filename={"history.csv"}
+          className="flex items-center gap-2 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+        >
+          Export CSV
+        </CSVLink>
+      </div>
       <table border={2} className="w-full border border-grey-300 text-center">
         <thead className="bg-amber-500">
           <tr>
