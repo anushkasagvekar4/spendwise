@@ -20,4 +20,12 @@
 - **Backend:** Node.js, Express, TypeScript  
 - **Database:** MongoDB  
 - **Styling:** TailwindCSS  
-- **API:** RESTful APIs  
+- **API:** RESTful APIs
+
+---
+
+## Screenshots
+
+![screenshot](<img width="1906" height="816" alt="home" src="https://github.com/user-attachments/assets/c56d7569-c0da-4297-a53f-4c902bdd5c43" />
+)
+
