@@ -1,4 +1,4 @@
- #SpendWise
+## SpendWise
 
 **SpendWise** is a responsive web application designed to help users manage their expenses efficiently. Users can add, update, and delete expense transactions, view their history, and track their finances — all through a clean and modern interface built with TailwindCSS.  
 
