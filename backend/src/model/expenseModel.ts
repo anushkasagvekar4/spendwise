@@ -24,7 +24,15 @@ const ExpenseSchema: Schema = new Schema(
     category: {
       type: [String],
       required: [true, "category is required"],
-      enum: ["Bills", "Movie", "Grocery", "Shopping", "Medicine", "Other"],
+      enum: [
+        "Bills",
+        "Movie",
+        "Grocery",
+        "Shopping",
+        "Medicine",
+        "Other",
+        "Food",
+      ],
     },
     time: {
       type: String,

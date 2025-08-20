@@ -19,5 +19,5 @@ app.use(
 );
 app.use(express.json());
 
-app.use("/api/expenses/", router);
+app.use("/api/expenses", router);
 app.listen(port, () => console.log(`server running on ${port}`));
