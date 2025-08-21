@@ -18,16 +18,27 @@ export const updateExpense = async (
     const updateData: any = {};
     const allowedFields = ["amount", "description", "category", "date", "time"];
 
-    // Only add fields that exist in req.body
     allowedFields.forEach((field) => {
       if (req.body[field] !== undefined) {
-        updateData[field] = req.body[field];
+        if (field === "category") {
+          try {
+            updateData[field] = JSON.parse(req.body[field]); // parse JSON string
+          } catch (err) {
+            updateData[field] = req.body[field]; // fallback
+          }
+        } else {
+          updateData[field] = req.body[field];
+        }
       }
     });
 
+    if (req.file) {
+      updateData.image = `/uploads/${req.file.filename}`;
+    }
+
     const updatedExpense = await ExpenseSchema.findByIdAndUpdate(
       id,
-      { $set: updateData }, // only updates the fields in updateData
+      { $set: updateData },
       { new: true, runValidators: true }
     );
 
@@ -39,7 +50,12 @@ export const updateExpense = async (
     res.status(200).json({
       success: true,
       message: "Expense updated",
-      data: updatedExpense,
+      data: {
+        ...updatedExpense.toObject(),
+        image: updatedExpense.image
+          ? `${req.protocol}://${req.get("host")}${updatedExpense.image}`
+          : null,
+      },
     });
   } catch (error: any) {
     res.status(500).json({

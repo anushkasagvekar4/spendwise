@@ -6,12 +6,17 @@ export const getExpense = async (
   res: Response
 ): Promise<void> => {
   try {
-    console.log("satrted normal get");
     const expenses = await ExpenseSchema.find().sort({ date: -1 });
+    const host = `${req.protocol}://${req.get("host")}`;
+    const expensesWithImageURL = expenses.map((exp) => ({
+      ...exp.toObject(),
+      image: exp.image ? `${host}${exp.image}` : null,
+    }));
+
     res.status(200).json({
       success: true,
       message: "Expenses fetched successfully",
-      data: expenses,
+      data: expensesWithImageURL,
     });
   } catch (error: any) {
     console.error(" Error fetching expenses:", error);

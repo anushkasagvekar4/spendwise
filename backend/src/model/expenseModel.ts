@@ -6,6 +6,7 @@ export interface IExpense extends Document {
   category: string[];
   date: Date;
   time: string;
+  image?: string;
 }
 
 const ExpenseSchema: Schema = new Schema(
@@ -43,6 +44,10 @@ const ExpenseSchema: Schema = new Schema(
       type: Date,
       required: [true, "date is required"],
       match: [/^\d{2}:\d{2}$/, "Time must be in HH:MM format"],
+    },
+    image: {
+      type: String,
+      default: null,
     },
   },
   { timestamps: true }

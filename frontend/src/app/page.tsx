@@ -12,6 +12,7 @@ export interface Expense {
   category: string[];
   date: string;
   time: string;
+  image: string;
 }
 
 const History = () => {
@@ -39,7 +40,6 @@ const History = () => {
 
   const deleteExpense = async (id: string) => {
     if (!confirm("Are you sure you want to delete this expense?")) return;
-    console.log("Deleting ID:", id);
     try {
       const res = await fetch(
         `http://localhost:3001/api/expenses/deleteExpense/${id}`,
@@ -84,6 +84,7 @@ const History = () => {
               <th>Category</th>
               <th>Date</th>
               <th>Time</th>
+              <th>Image</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -95,8 +96,26 @@ const History = () => {
                   <td className="px-4 py-2">{expense.amount}</td>
                   <td className="px-4 py-2">{expense.description}</td>
                   <td className="px-4 py-2">{expense.category.join(",")}</td>
-                  <td className="px-4 py-2">{expense.date}</td>
+                  <td className="px-4 py-2">
+                    {expense.date
+                      ? new Date(expense.date).toLocaleDateString("en-GB")
+                      : ""}
+                  </td>
                   <td className="px-4 py-2">{expense.time}</td>
+                  <td className="px-4 py-2">
+                    {expense.image ? (
+                      <a
+                        href={expense.image}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-amber-700 underline"
+                      >
+                        View Image
+                      </a>
+                    ) : (
+                      "No Image"
+                    )}
+                  </td>
                   <td className="px-4 py-2 flex gap-2 justify-center ">
                     <button
                       className="text-green-600 cursor-pointer"
