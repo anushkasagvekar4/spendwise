@@ -62,8 +62,8 @@ const History = () => {
       } else {
         alert(data.message || "Failed to delete expense");
       }
-    } catch (err) {
-      alert("Error deleting expense");
+    } catch (err: unknown) {
+      console.error("Error deleting expense", err);
     }
   };
 
