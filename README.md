@@ -23,6 +23,7 @@
 - **Database:** MongoDB  
 - **Styling:** TailwindCSS  
 - **API:** RESTful APIs
+- **Image Upload:** Multer  
 
 
 
