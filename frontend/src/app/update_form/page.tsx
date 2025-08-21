@@ -18,8 +18,8 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ expenseId }) => {
     "Grocery",
     "Shopping",
     "Medicine",
-    "Other",
     "Food",
+    "Other",
   ];
 
   const handleTagsClick = (tag: string) => {
@@ -41,13 +41,14 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ expenseId }) => {
         const data = await res.json();
 
         setData(data.data);
-
-        if (res.ok && data) {
-          const expense = data.data;
-        } else {
+        if (data.data?.category) {
+          setSelectedTags(data.data.category);
+        }
+        if (!res.ok || !data) {
           alert("Error fetching expense: " + (data.message || "Unknown error"));
         }
-      } catch (err) {
+      } catch (err: unknown) {
+        console.error("Error fetching expense:", err);
         alert("Server error while fetching expense");
       }
     };
@@ -90,10 +91,10 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ expenseId }) => {
   };
 
   return (
-    <div className="bg-opacity w-[350] ">
+    <div className="bg-opacity max-w-[580px] mx-auto ">
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 p-6 bg-amber-50 rounded-2xl"
+        className="space-y-2 p-6 bg-amber-50 rounded-2xl"
       >
         <div>
           <label className="block mb-1 font-medium">Amount:</label>

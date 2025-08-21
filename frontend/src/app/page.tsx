@@ -24,13 +24,13 @@ const History = () => {
     const fetchExpenses = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/expenses/getExpense"
+          "http://localhost:3001/api/expenses/getExpense"
         );
         const data = await res.json();
         if (data.success) {
           setExpenses(data.data);
         }
-      } catch (err) {
+      } catch (err: unknown) {
         console.error("Error fetching expenses:", err);
       }
     };
