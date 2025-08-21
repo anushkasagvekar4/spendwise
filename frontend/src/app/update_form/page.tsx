@@ -84,9 +84,8 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ expenseId }) => {
       } else {
         alert("Error: " + data.message);
       }
-    } catch (err) {
-      console.error(err);
-      alert("Server error, try again later.");
+    } catch (err: unknown) {
+      console.error("Server error, try again later.", err);
     }
   };
 
@@ -118,7 +117,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ expenseId }) => {
               setDescription(e.target.value);
             }}
             className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-            placeholder="Optional notes..."
+            placeholder="Add Description Here"
             required
           />
         </div>
