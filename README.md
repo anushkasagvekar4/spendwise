@@ -6,11 +6,13 @@
 
 ## Features
 
-- **Add Expenses:** Quickly add new expense transactions with details like amount, category,date,time, and description.  
-- **Update Expenses:** Edit existing expenses with ease.  
-- **Delete Expenses:** Remove transactions you no longer want to track.  
-- **Expense History:** View a detailed list of all your transactions.  
-- **Responsive Design:** Works seamlessly on mobile, tablet, and desktop.  
+- **Add Expenses**: Quickly add new expense transactions with details like amount, category, date, time, description, and optional image upload.  
+- **Update Expenses**: Edit existing expenses with ease.  
+- **Delete Expenses**: Remove transactions you no longer want to track.  
+- **Expense History**: View a detailed list of all your transactions.  
+- **Image Upload**: Users can upload images for expenses. Images are stored securely on the backend using Multer.  
+- **Real-Time Updates**: After updating an expense, refresh the page to see the latest changes.  
+- **Responsive Design**: Works seamlessly on mobile, tablet, and desktop.
 
 ---
 
