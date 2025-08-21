@@ -4,7 +4,6 @@ import React, { useState } from "react";
 const ExpenseForm = () => {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [message, setMessage] = useState("");
@@ -14,6 +13,7 @@ const ExpenseForm = () => {
     "Grocery",
     "Shopping",
     "Medicine",
+    "Food",
     "Other",
   ];
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -41,7 +41,7 @@ const ExpenseForm = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/expenses/addExpense", {
+      const res = await fetch("http://localhost:3001/api/expenses/addExpense", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +49,7 @@ const ExpenseForm = () => {
         body: JSON.stringify({
           amount,
           description,
-          category: selectedTags.join(","),
+          category: selectedTags,
           date,
           time,
         }),
@@ -68,7 +68,8 @@ const ExpenseForm = () => {
       } else {
         setMessage(data.message || "Failed to add expense");
       }
-    } catch (err) {
+    } catch (err: unknown) {
+      console.error("Server error:", err);
       setMessage("Server error. Try again later.");
     }
   };

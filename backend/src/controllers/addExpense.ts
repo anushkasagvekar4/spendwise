@@ -7,7 +7,7 @@ export const addExpense = async (
 ): Promise<void> => {
   try {
     const { amount, description, category, date, time } = req.body;
-    if (!amount || !description || !category || !date || !time) {
+    if (!amount || !description || category.length === 0 || !date || !time) {
       res
         .status(400)
         .json({ success: false, message: "All fields are required" });
