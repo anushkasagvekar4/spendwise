@@ -6,12 +6,7 @@ export const getExpenseById = async (
   res: Response
 ): Promise<void> => {
   try {
-    console.log("started");
     const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      res.status(400).json({ message: "Invalid expense ID format" });
-      return;
-    }
 
     const expense = await ExpenseSchema.findById(id);
 
@@ -19,8 +14,14 @@ export const getExpenseById = async (
       res.status(404).json({ success: false, message: "Expense not found" });
       return;
     }
+    const expenseWithImage = {
+      ...expense.toObject(),
+      image: expense.image
+        ? `${req.protocol}://${req.get("host")}${expense.image}`
+        : null,
+    };
 
-    res.status(200).json({ success: true, data: expense });
+    res.status(200).json({ success: true, data: expenseWithImage });
   } catch (error: any) {
     res
       .status(500)

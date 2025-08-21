@@ -3,6 +3,7 @@ import { config } from "dotenv";
 import cors from "cors";
 import router from "./routes/expenseRoutes";
 import { connectDb } from "./utils/db";
+import path from "path";
 
 const app: Express = express();
 
@@ -18,6 +19,8 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api/expenses", router);
 app.listen(port, () => console.log(`server running on ${port}`));

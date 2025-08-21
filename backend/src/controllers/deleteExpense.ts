@@ -17,6 +17,12 @@ export const deleteExpense = async (
       res.status(404).json({ success: false, message: "Expense not found" });
       return;
     }
+    const expenseData = {
+      ...deletedExpense.toObject(),
+      image: deletedExpense.image
+        ? `${req.protocol}://${req.get("host")}${deletedExpense.image}`
+        : null,
+    };
 
     res.status(200).json({
       success: true,
