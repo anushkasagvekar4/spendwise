@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import ExpenseSchema from "../model/expenseModel";
+
+import { deleteFile } from "../utils/fileHelper";
+
 export const deleteExpense = async (
   req: Request,
   res: Response
@@ -12,17 +15,17 @@ export const deleteExpense = async (
         .json({ success: false, message: "Expense ID is required" });
       return;
     }
+
     const deletedExpense = await ExpenseSchema.findByIdAndDelete(id);
+
     if (!deletedExpense) {
       res.status(404).json({ success: false, message: "Expense not found" });
       return;
     }
-    const expenseData = {
-      ...deletedExpense.toObject(),
-      image: deletedExpense.image
-        ? `${req.protocol}://${req.get("host")}${deletedExpense.image}`
-        : null,
-    };
+
+    if (deletedExpense.image) {
+      deleteFile(deletedExpense.image);
+    }
 
     res.status(200).json({
       success: true,
@@ -30,7 +33,7 @@ export const deleteExpense = async (
       data: deletedExpense,
     });
   } catch (error: any) {
-    console.error(" Error deleting expense:", error);
+    console.error("Error deleting expense:", error);
     res.status(500).json({
       success: false,
       message: "Server error",

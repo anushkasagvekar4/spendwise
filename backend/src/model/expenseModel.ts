@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IExpense extends Document {
+  user: string;
   amount: number;
   description: string;
   category: string[];
@@ -11,20 +12,21 @@ export interface IExpense extends Document {
 
 const ExpenseSchema: Schema = new Schema(
   {
+    user: {
+      type: String,
+      required: true,
+    },
     amount: {
       type: Number,
-      required: [true, "Amount is required"],
-      min: [1, "Amount must be greater than 0"],
+      required: true,
     },
     description: {
       type: String,
-      required: [true, "Amount is required"],
-      minlength: [3, "Description must be at least 3 characters"],
-      maxlength: [100, "Description cannot exceed 100 characters"],
+      required: true,
     },
     category: {
       type: [String],
-      required: [true, "category is required"],
+      required: true,
       enum: [
         "Bills",
         "Movie",
@@ -37,17 +39,15 @@ const ExpenseSchema: Schema = new Schema(
     },
     time: {
       type: String,
-      required: [true, "time is required"],
-      match: [/^\d{2}:\d{2}$/, "Time must be in HH:MM format"],
+      required: true,
     },
     date: {
       type: Date,
-      required: [true, "date is required"],
-      match: [/^\d{2}:\d{2}$/, "Time must be in HH:MM format"],
+      required: true,
     },
     image: {
       type: String,
-      default: null,
+      required: false,
     },
   },
   { timestamps: true }

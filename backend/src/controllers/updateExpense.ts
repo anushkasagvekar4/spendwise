@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import ExpenseSchema from "../model/expenseModel";
+import { saveBase64Image } from "../utils/saveBase64Image";
+import { deleteFile } from "../utils/fileHelper";
+import { date } from "joi";
 
 export const updateExpense = async (
   req: Request,
@@ -16,24 +19,30 @@ export const updateExpense = async (
     }
 
     const updateData: any = {};
-    const allowedFields = ["amount", "description", "category", "date", "time"];
-
-    allowedFields.forEach((field) => {
+    const allowedFields = [
+      "amount",
+      "description",
+      "category",
+      "date",
+      "time",
+      "image",
+    ];
+    for (const field of allowedFields) {
       if (req.body[field] !== undefined) {
         if (field === "category") {
           try {
-            updateData[field] = JSON.parse(req.body[field]); // parse JSON string
+            updateData[field] = JSON.parse(req.body[field]);
           } catch (err) {
-            updateData[field] = req.body[field]; // fallback
+            updateData[field] = req.body[field];
           }
+        } else if (field === "image" && req.body[field]) {
+          const expense = await ExpenseSchema.findById(id);
+          if (expense?.image) deleteFile(expense.image);
+          updateData[field] = saveBase64Image(req.body[field]);
         } else {
           updateData[field] = req.body[field];
         }
       }
-    });
-
-    if (req.file) {
-      updateData.image = `/uploads/${req.file.filename}`;
     }
 
     const updatedExpense = await ExpenseSchema.findByIdAndUpdate(
@@ -42,6 +51,7 @@ export const updateExpense = async (
       { new: true, runValidators: true }
     );
 
+    console.log(updatedExpense);
     if (!updatedExpense) {
       res.status(404).json({ success: false, message: "Expense not found" });
       return;

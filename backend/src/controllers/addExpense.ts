@@ -1,13 +1,15 @@
 import { Request, Response } from "express";
 import ExpenseSchema from "../model/expenseModel";
+import { JwtPayload } from "jsonwebtoken";
+import { AuthRequest } from "../middleware/Auth";
+import { saveBase64Image } from "../utils/saveBase64Image"; // ✅ Import helper
 
 export const addExpense = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
-    const { amount, description, category, date, time } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : null;
+    const { amount, description, category, date, time, image } = req.body;
 
     let categories: string[] = [];
     if (Array.isArray(category)) {
@@ -16,11 +18,17 @@ export const addExpense = async (
       categories = [category];
     }
 
-    if (!amount || !description || categories.length === 0 || !date || !time) {
-      res
-        .status(400)
-        .json({ success: false, message: "All fields are required" });
+    const user = req.user as JwtPayload | undefined;
+    const userId = user?.id;
+    if (!userId) {
+      res.status(401).json({ success: false, message: "Unauthorized" });
       return;
+    }
+
+    let imagePath: string | null = null;
+
+    if (image && typeof image === "string" && image.trim() !== "") {
+      imagePath = saveBase64Image(image);
     }
 
     const expense = new ExpenseSchema({
@@ -29,7 +37,8 @@ export const addExpense = async (
       category: categories,
       date,
       time,
-      image,
+      image: imagePath,
+      user: userId,
     });
 
     await expense.save();
